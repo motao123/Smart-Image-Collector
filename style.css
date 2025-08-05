@@ -1,0 +1,390 @@
+/*
+ * Smart Image Collector - Web Image Extraction Tool
+ * PHP Backend API File
+ * 
+ * @author 陌涛 (Mo Tao)
+ * @version 1.0.0
+ * @website https://imotao.com/
+ * @license MIT License
+ * 
+ * Copyright (c) 2025 陌涛 (Mo Tao)
+ * All rights reserved.
+ * 
+ * Professional web image resource extraction tool
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: white;
+}
+
+.header h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.header .subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.input-section {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.url-input-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.url-input {
+    flex: 1;
+    padding: 15px 20px;
+    border: 2px solid #e1e5e9;
+    border-radius: 50px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.url-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.analyze-btn {
+    padding: 15px 30px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.analyze-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.analyze-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.loading {
+    display: none;
+    text-align: center;
+    padding: 40px;
+    color: #667eea;
+}
+
+.loading i {
+    font-size: 3rem;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-message {
+    display: none;
+    background: #fee;
+    color: #c33;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    border-left: 4px solid #c33;
+}
+
+.batch-download-notice {
+    display: none;
+    background: #fff3cd;
+    color: #856404;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    border-left: 4px solid #ffc107;
+    text-align: center;
+}
+
+.batch-download-notice i {
+    margin-right: 8px;
+}
+
+.results-section {
+    display: none;
+}
+
+.results-header {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.results-count {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #667eea;
+}
+
+.results-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.select-all-btn {
+    background: #28a745;
+    color: white;
+}
+
+.select-all-btn:hover {
+    background: #218838;
+    transform: translateY(-1px);
+}
+
+.download-selected-btn {
+    background: #007bff;
+    color: white;
+}
+
+.download-selected-btn:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+}
+
+.download-selected-btn:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.images-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.image-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.image-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.image-preview {
+    width: 100%;
+    height: 200px;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+.image-preview:hover img {
+    transform: scale(1.05);
+}
+
+.image-placeholder {
+    color: #6c757d;
+    font-size: 3rem;
+}
+
+.image-loading {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.image-info {
+    padding: 15px;
+}
+
+.image-url {
+    font-size: 12px;
+    color: #6c757d;
+    word-break: break-all;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.image-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.image-source {
+    background: #e9ecef;
+    color: #495057;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.image-size {
+    color: #6c757d;
+    font-size: 12px;
+}
+
+.image-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.image-select-checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.download-btn {
+    flex: 1;
+    padding: 8px 15px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.download-btn:hover {
+    background: #218838;
+    transform: translateY(-1px);
+}
+
+.preview-btn {
+    padding: 8px 12px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.preview-btn:hover {
+    background: #545b62;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: white;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.7;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    opacity: 0.8;
+    line-height: 1.6;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .url-input-container {
+        flex-direction: column;
+    }
+
+    .results-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .images-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+    }
+}

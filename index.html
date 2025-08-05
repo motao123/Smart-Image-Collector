@@ -1,0 +1,84 @@
+<!--
+ * Smart Image Collector - Web Image Extraction Tool
+ * PHP Backend API File
+ * 
+ * @author 陌涛 (Mo Tao)
+ * @version 1.0.0
+ * @website https://imotao.com/
+ * @license MIT License
+ * 
+ * Copyright (c) 2025 陌涛 (Mo Tao)
+ * All rights reserved.
+ * 
+ * Professional web image resource extraction tool
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能图片采集器 - 网页图片提取工具</title>
+    <meta name="description" content="智能图片采集器是一款专业的网页图片资源提取工具，支持批量下载、智能识别多种图片来源，为开发者和设计师提供高效的图片采集解决方案。">
+    <meta name="keywords" content="图片提取器,网页爬虫,图片采集器,批量下载,资源提取,图片抓取,网页工具,响应式设计,前端工具,开发工具,image extractor,web scraper,batch download">
+    <meta name="author" content="陌涛 (Mo Tao)">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-images"></i> 智能图片采集器</h1>
+            <p class="subtitle">专业的网页图片资源提取工具</p>
+        </header>
+
+        <main class="main">
+            <div class="input-section">
+                <div class="url-input-container">
+                    <input type="url" id="urlInput" placeholder="请输入要分析的网页URL..." class="url-input">
+                    <button id="analyzeBtn" class="analyze-btn">
+                        <i class="fas fa-search"></i> 开始采集
+                    </button>
+                </div>
+
+                <div id="loading" class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>正在分析网页，请稍候...</p>
+                </div>
+
+                <div id="errorMessage" class="error-message"></div>
+
+                <div id="batchNotice" class="batch-download-notice">
+                    <i class="fas fa-info-circle"></i>
+                    由于浏览器安全限制，批量下载可能较慢，请耐心等待...
+                </div>
+            </div>
+
+            <div id="resultsSection" class="results-section">
+                <div class="results-header">
+                    <div class="results-count" id="resultsCount">找到 0 张图片</div>
+                    <div class="results-actions">
+                        <button id="selectAllBtn" class="action-btn select-all-btn">
+                            <i class="fas fa-check-square"></i> 全选
+                        </button>
+                        <button id="downloadSelectedBtn" class="action-btn download-selected-btn" disabled>
+                            下载选中 (0)
+                        </button>
+                    </div>
+                </div>
+
+                <div id="imagesGrid" class="images-grid">
+                    <!-- 图片卡片将在这里动态生成 -->
+                </div>
+            </div>
+
+            <div id="emptyState" class="empty-state">
+                <i class="fas fa-images"></i>
+                <h3>开始使用智能图片采集器</h3>
+                <p>输入网页URL，点击"开始采集"按钮<br>即可提取网页中的所有图片资源</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -6,7 +6,7 @@
 
 **Author:** 陌涛 (Mo Tao)  
 **Version:** 1.0.0  
-**Website:** https://imotao.com/ 
+**Website:** https://imotao.com/  
 **License:** MIT License  
 
 ## 📋 Description | 项目简介
